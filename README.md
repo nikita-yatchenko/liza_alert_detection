@@ -15,10 +15,11 @@ poetry install
 ```
 - Запускаем сервис: 
 ```
-...
+python src/solution.py < example_predict.json
 ```
 
 ## Как запустить через docker:
 ```
-docker-compose up -d
+docker build . -t detection
+docker run -i detection < example_predict.json  
 ```

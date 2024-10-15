@@ -1,3 +1,5 @@
+import json
+import sys
 from pathlib import Path
 import random
 import numpy as np
@@ -24,7 +26,16 @@ else:
 MODEL = YOLO(Path(BASE_DIR, 'model', 'v7_best.pt')).to(DEVICE)
 
 
-def predict(images: Union[str, Path, List[np.ndarray], np.ndarray]) -> list[dict]:
+def predict():
+    input_data = sys.stdin.read()
+    input_images = list(json.loads(input_data).values())
+    input_images = [np.array(i, dtype=np.float32) for i in input_images]
+    predictions = predict_multiple(input_images)
+    print(predictions)
+    return predictions
+
+
+def predict_multiple(images: Union[List[np.ndarray], List[str], np.ndarray]) -> list[dict]:
     """
 
     :param images:
@@ -57,6 +68,7 @@ def predict(images: Union[str, Path, List[np.ndarray], np.ndarray]) -> list[dict
         ]
     """
     results = []
+    print(images[0].shape)
     model_inference = MODEL(images)  # return a list of Results objects
 
     # Process results list
@@ -94,9 +106,7 @@ def predict(images: Union[str, Path, List[np.ndarray], np.ndarray]) -> list[dict
 
 
 if __name__ == "__main__":
-    import cv2
-
-    img = cv2.imread(r'../test_images/1_002301_zoom.JPG')
-    img1 = cv2.imread(r'../test_images/1_000178.JPG')
-
-    predict([img, img1])
+    predict()
+    # import cv2
+    # img = cv2.imread(r'../test_images/1_002301_zoom.JPG')
+    # print(predict_multiple([img]))

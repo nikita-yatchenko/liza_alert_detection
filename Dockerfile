@@ -35,3 +35,5 @@ WORKDIR /app
 COPY --from=builder /app/.venv ./.venv
 
 COPY . .
+
+CMD ["python", "src/solution.py"]
